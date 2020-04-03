@@ -34,7 +34,14 @@ module.exports = {
         path: `${__dirname}/data`,
       },
     },
-      `gatsby-transformer-json`,
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `forum `,
+        path: `${__dirname}/forum`,
+      },
+    },
+    `gatsby-transformer-json`,
     `gatsby-plugin-mdx`,
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
@@ -51,6 +58,7 @@ module.exports = {
       },
     },
     `gatsby-plugin-typescript`,
+    `gatsby-plugin-sass`
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,

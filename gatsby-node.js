@@ -21,10 +21,67 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     }
 };
 
+async function loadForums({graphql,createPage}) {
+    const forums = await graphql(
+        `
+        query {
+            allForumJson {
+                edges {
+                    node {
+                        id
+                        name
+                    }
+                }
+            }
+        }
+        `
+    )
+
+    const indexTemplate = path.resolve(`src/templates/forum-index.tsx`);
+
+    forums.data.allForumJson.edges.forEach(edge => {
+        createPage({
+            path: `/forum/${edge.node.name}/`,
+            component: indexTemplate,
+            context: {
+                id: edge.node.id
+            }
+        })
+    })
+}
+
+async function loadTopics({graphql,createPage}) {
+    const forums = await graphql(
+        `
+        query {
+            allTopicJson {
+                edges {
+                    node {
+                        id
+                        name
+                    }
+                }
+            }
+        }
+        `
+    )
+
+    const indexTemplate = path.resolve(`src/templates/topic.tsx`);
+
+    forums.data.allTopicJson.edges.forEach(edge => {
+        createPage({
+            path: `/forum/${edge.node.name}/`,
+            component: indexTemplate,
+            context: {
+                id: edge.node.id
+            }
+        })
+    })}
+
 exports.createPages = async ({ graphql, actions, reporter }) => {
     // Destructure the createPage function from the actions object
     const { createPage } = actions
-    const result = await graphql(`
+    let result = await graphql(`
     query {
       allMdx {
         edges {
@@ -56,4 +113,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             context: { id: node.id },
         })
     })
+
+    await loadForums({graphql, createPage});
+    await loadTopics({graphql, createPage});
 }

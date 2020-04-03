@@ -13,7 +13,6 @@ const BlogIndex = ({ data }) => {
                         <Link to={post.fields.slug}>
                             <h2>{post.frontmatter.title}</h2>
                         </Link>
-                        <p>{post.html}</p>
                     </li>
                 ))}
             </ul>
@@ -26,7 +25,6 @@ export const pageQuery = graphql`
       edges {
         node {
           id
-          html
           frontmatter {
             title
           }

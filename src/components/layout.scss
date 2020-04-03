@@ -620,3 +620,30 @@ pre tt:after {
     font-size: 100%;
   }
 }
+
+span.action {
+  font-weight: lighter;
+}
+
+ul.thread {
+  list-style-type: none;
+  li.post {
+    div.character {
+      padding: 0.5em;
+      background-color: #EBF5FF;
+      display: inline-block;
+      width: 70%;
+    }
+    div.date {
+      padding: 0.5em;
+      background-color: #409cff;
+      display: inline-block;
+      text-align: right;
+      width: 30%;
+    }
+    div.content {
+      padding: 0.5em;
+      background-color: #D2E4FC;
+    }
+  }
+}
