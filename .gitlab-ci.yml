@@ -1,0 +1,54 @@
+stages:
+  - prepare
+  - build
+  - package
+
+site:prepare:
+  image: alpine/git:v2.26.2
+  stage: prepare
+  tags:
+    - kubernetes
+    - cluster
+  script:
+    - echo "VERSION=$(git describe | sed s!release/!!g)" > variables.env
+  artifacts:
+    reports:
+      dotenv:
+        - variables.env
+
+site:build:
+  stage: build
+  image: node:15.2.1-alpine3.11
+  tags:
+    - kubernetes
+    - cluster
+  script:
+    - yarn install --lockfile-only
+    - yarn build
+  artifacts:
+    name: site
+    paths:
+      - public
+
+site:package:
+  stage: package
+  image: quay.io/buildah/stable:v1.16.0
+  needs:
+    - job: site:build
+      artifacts: true
+    - job: site:prepare
+      artifacts: true
+  tags:
+    - kubernetes
+    - cluster
+  before_script:
+    - buildah login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - buildah from halverneus/static-file-server:v1.7.2 > container
+  script:
+    - C=$(cat container)
+    - buildah copy "${C}" "${PWD}/public" /web
+    - buildah commit "${C}" "$CI_REGISTRY:$VERSION"
+    - buildah push "$CI_REGISTRY:$VERSION" "docker://$CI_REGISTRY:$VERSION"
+  after_script:
+    - C=$(cat container)
+    - buildah rm "${C}"
