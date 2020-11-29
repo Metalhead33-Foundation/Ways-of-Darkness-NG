@@ -23,11 +23,12 @@ site:build:
       - node_modules
       - .cache
   stage: build
-  image: node:15.2.1-alpine3.11
+  image: node:15.2.1-buster
   tags:
     - kubernetes
     - cluster
   script:
+    - apk add python
     - yarn install --lockfile-only --network-timeout 100000
     - yarn build
   artifacts:
