@@ -28,7 +28,6 @@ site:build:
     - kubernetes
     - cluster
   script:
-    - apk add python
     - yarn install --lockfile-only --network-timeout 100000
     - yarn build
   artifacts:
