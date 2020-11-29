@@ -17,13 +17,18 @@ site:prepare:
         - variables.env
 
 site:build:
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-node
+    paths:
+      - node_modules
+      - .cache
   stage: build
   image: node:15.2.1-alpine3.11
   tags:
     - kubernetes
     - cluster
   script:
-    - yarn install --lockfile-only
+    - yarn install --lockfile-only --network-timeout 100000
     - yarn build
   artifacts:
     name: site
