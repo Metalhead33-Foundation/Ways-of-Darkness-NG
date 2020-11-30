@@ -52,8 +52,8 @@ site:package:
   script:
     - C=$(cat container)
     - buildah copy "${C}" "${PWD}/public" /web
-    - buildah commit "${C}" "$CI_REGISTRY:$VERSION"
-    - buildah push "$CI_REGISTRY:$VERSION" "docker://$CI_REGISTRY:$VERSION"
+    - buildah commit "${C}" "$CI_REGISTRY_IMAGE:$VERSION"
+    - buildah push "$CI_REGISTRY_IMAGE:$VERSION" "docker://$CI_REGISTRY_IMAGE:$VERSION"
   after_script:
     - C=$(cat container)
     - buildah rm "${C}"
