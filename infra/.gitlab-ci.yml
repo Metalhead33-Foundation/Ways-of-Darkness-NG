@@ -37,6 +37,7 @@ deploy:plan:dev:
   environment:
     name: development
     action: prepare
+    url: https://$domain
     auto_stop_in: 7 days
   rules:
     - if: '$CI_COMMIT_BRANCH == "development"'
@@ -62,6 +63,7 @@ deploy:apply:dev:
   environment:
     name: development
     on_stop: deploy:stop:dev
+    url: $domain
     auto_stop_in: 7 days
   script:
     - gitlab-terraform apply
@@ -98,6 +100,7 @@ deploy:plan:branch:
   environment:
     name: $CI_COMMIT_REF_SLUG
     action: prepare
+    url: https://$CI_COMMIT_REF_SLUG.wod.sonck.nl
     auto_stop_in: 2 days
   rules:
     - if: '$CI_COMMIT_TAG == "" && $CI_COMMIT_BRANCH == "development"'
@@ -124,6 +127,7 @@ deploy:apply:branch:
   stage: deploy
   environment:
     name: $CI_COMMIT_REF_SLUG
+    url: https://$CI_COMMIT_REF_SLUG.wod.sonck.nl
     on_stop: deploy:stop:branch
     auto_stop_in: 2 days
   script:
@@ -159,6 +163,7 @@ deploy:plan:pro:
   environment:
     name: production
     action: prepare
+    url: https://$domain
   rules:
     - if: '$CI_COMMIT_TAG =~ /^release\//'
       when: on_success
@@ -182,7 +187,7 @@ deploy:apply:pro:
   stage: deploy
   environment:
     name: production
-    on_stop: deploy:stop:pro
+    url: https://$domain
   script:
     - gitlab-terraform apply
   rules:
