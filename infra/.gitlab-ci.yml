@@ -160,7 +160,7 @@ deploy:plan:pro:
     name: production
     action: prepare
   rules:
-    - if: '$CI_COMMIT_TAG =~ /^release\//"'
+    - if: '$CI_COMMIT_TAG =~ /^release\//'
       when: on_success
   script:
     - echo "app_version = \"$VERSION\"" > site.version.auto.tfvars
@@ -186,5 +186,5 @@ deploy:apply:pro:
   script:
     - gitlab-terraform apply
   rules:
-    - if: '$CI_COMMIT_TAG =~ /^release\//"'
+    - if: '$CI_COMMIT_TAG =~ /^release\//'
       when: on_success
