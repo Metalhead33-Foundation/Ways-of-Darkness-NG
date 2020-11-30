@@ -56,7 +56,7 @@ deploy:apply:dev:
   needs:
     - job: deploy:plan:dev
       artifacts: true
-    - job: app:package
+    - job: site:package
       artifacts: false
   stage: deploy
   environment:
@@ -119,7 +119,7 @@ deploy:apply:branch:
   needs:
     - job: deploy:plan:dev
       artifacts: true
-    - job: app:package
+    - job: site:package
       artifacts: false
   stage: deploy
   environment:
@@ -177,7 +177,7 @@ deploy:apply:pro:
   needs:
     - job: deploy:plan:pro
       artifacts: true
-    - job: app:package
+    - job: site:package
       artifacts: false
   stage: deploy
   environment:
