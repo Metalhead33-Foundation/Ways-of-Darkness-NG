@@ -16,6 +16,9 @@ deploy:init:
   stage: prepare
   script:
     - gitlab-terraform init
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "development" || $CI_COMMIT_BRANCH == "development" || $CI_COMMIT_TAG =~ /^release\//'
+      when: on_success
 
 deploy:validate:
   <<: *deploy_tpl
@@ -25,6 +28,9 @@ deploy:validate:
   stage: validate
   script:
     - gitlab-terraform validate
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "development" || $CI_COMMIT_BRANCH == "development" || $CI_COMMIT_TAG =~ /^release\//'
+      when: on_success
 
 deploy:plan:dev:
   <<: *deploy_tpl
