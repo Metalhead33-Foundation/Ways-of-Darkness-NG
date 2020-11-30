@@ -22,6 +22,7 @@ site:build:
     paths:
       - node_modules
       - .cache
+      - public
   stage: build
   image: node:15.2.1-buster
   tags:
