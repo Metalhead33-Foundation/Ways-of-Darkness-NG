@@ -61,3 +61,5 @@ site:package:
   after_script:
     - C=$(cat container)
     - buildah rm "${C}"
+
+include: /infra/.gitlab-ci.yml
