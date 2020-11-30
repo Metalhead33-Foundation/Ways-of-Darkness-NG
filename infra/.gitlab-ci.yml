@@ -104,7 +104,7 @@ deploy:plan:branch:
     url: https://$CI_COMMIT_REF_SLUG.wod.sonck.nl
     auto_stop_in: 2 days
   rules:
-    - if: '$CI_COMMIT_BRANCH != "development"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "development"'
       when: on_success
   script:
     - echo "app_version = \"$VERSION\"" > site.version.auto.tfvars
@@ -135,7 +135,7 @@ deploy:apply:branch:
   script:
     - gitlab-terraform apply
   rules:
-    - if: '$CI_COMMIT_BRANCH != "development"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "development"'
       when: on_success
 
 deploy:stop:branch:
@@ -154,7 +154,7 @@ deploy:stop:branch:
     name: $CI_COMMIT_REF_SLUG
     action: stop
   rules:
-    - if: '$CI_COMMIT_BRANCH != "development"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "development"'
       when: manual
 
 deploy:plan:pro:
