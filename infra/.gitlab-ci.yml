@@ -13,16 +13,12 @@
 
 deploy:init:
   <<: *deploy_tpl
-  variables:
-    <<: *deploy_tpl_vars
   stage: prepare
   script:
     - gitlab-terraform init
 
 deploy:validate:
   <<: *deploy_tpl
-  variables:
-    <<: *deploy_tpl_vars
   needs:
     - job: deploy:init
       artifacts: false
@@ -32,8 +28,6 @@ deploy:validate:
 
 deploy:plan:dev:
   <<: *deploy_tpl
-  variables:
-    <<: *deploy_tpl_vars
   needs:
     - job: deploy:validate
       artifacts: false
@@ -60,8 +54,6 @@ deploy:plan:dev:
 
 deploy:apply:dev:
   <<: *deploy_tpl
-  variables:
-    <<: *deploy_tpl_vars
   needs:
     - job: deploy:plan:dev
       artifacts: true
@@ -81,8 +73,6 @@ deploy:apply:dev:
 
 deploy:stop:dev:
   <<: *deploy_tpl
-  variables:
-    <<: *deploy_tpl_vars
   needs:
     - job: deploy:apply:dev
       artifacts: false
