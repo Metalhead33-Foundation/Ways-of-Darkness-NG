@@ -117,7 +117,7 @@ deploy:apply:branch:
     domain: ${CI_COMMIT_REF_SLUG}.wod.sonck.nl
   <<: *deploy_tpl
   needs:
-    - job: deploy:plan:dev
+    - job: deploy:plan:branch
       artifacts: true
     - job: site:package
       artifacts: false
@@ -135,7 +135,7 @@ deploy:apply:branch:
 deploy:stop:branch:
   <<: *deploy_tpl
   needs:
-    - job: deploy:apply:dev
+    - job: deploy:apply:branch
       artifacts: false
   stage: destroy
   script:
@@ -182,7 +182,7 @@ deploy:apply:pro:
   stage: deploy
   environment:
     name: production
-    on_stop: deploy:stop:dev
+    on_stop: deploy:stop:pro
   script:
     - gitlab-terraform apply
   rules:
