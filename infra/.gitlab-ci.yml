@@ -1,6 +1,6 @@
 .deploy_template: &deploy_tpl
   image: registry.gitlab.com/gitlab-org/terraform-images/releases/0.13:v0.2.4
-  variables:
+  variables: &deploy_tpl_vars
     TF_ROOT: ${CI_PROJECT_DIR}/infra
     TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/${CI_ENVIRONMENT_NAME}
   cache:
@@ -13,12 +13,16 @@
 
 deploy:init:
   <<: *deploy_tpl
+  variables:
+    <<: *deploy_tpl_vars
   stage: prepare
   script:
     - gitlab-terraform init
 
 deploy:validate:
   <<: *deploy_tpl
+  variables:
+    <<: *deploy_tpl_vars
   needs:
     - job: deploy:init
       artifacts: false
@@ -28,6 +32,8 @@ deploy:validate:
 
 deploy:plan:dev:
   <<: *deploy_tpl
+  variables:
+    <<: *deploy_tpl_vars
   needs:
     - job: deploy:validate
       artifacts: false
@@ -54,6 +60,8 @@ deploy:plan:dev:
 
 deploy:apply:dev:
   <<: *deploy_tpl
+  variables:
+    <<: *deploy_tpl_vars
   needs:
     - job: deploy:plan:dev
       artifacts: true
@@ -73,6 +81,8 @@ deploy:apply:dev:
 
 deploy:stop:dev:
   <<: *deploy_tpl
+  variables:
+    <<: *deploy_tpl_vars
   needs:
     - job: deploy:apply:dev
       artifacts: false
@@ -88,9 +98,10 @@ deploy:stop:dev:
       when: manual
 
 deploy:plan:branch:
-  variables:
-    domain: ${CI_COMMIT_REF_SLUG}.wod.sonck.nl
   <<: *deploy_tpl
+  variables:
+    <<: *deploy_tpl_vars
+    domain: ${CI_COMMIT_REF_SLUG}.wod.sonck.nl
   needs:
     - job: deploy:validate
       artifacts: false
@@ -116,9 +127,10 @@ deploy:plan:branch:
       - ${TF_ROOT}/site.version.auto.tfvars
 
 deploy:apply:branch:
-  variables:
-    domain: ${CI_COMMIT_REF_SLUG}.wod.sonck.nl
   <<: *deploy_tpl
+  variables:
+    <<: *deploy_tpl_vars
+    domain: ${CI_COMMIT_REF_SLUG}.wod.sonck.nl
   needs:
     - job: deploy:plan:branch
       artifacts: true
@@ -138,6 +150,9 @@ deploy:apply:branch:
 
 deploy:stop:branch:
   <<: *deploy_tpl
+  variables:
+    <<: *deploy_tpl_vars
+    domain: ${CI_COMMIT_REF_SLUG}.wod.sonck.nl
   needs:
     - job: deploy:apply:branch
       artifacts: false
